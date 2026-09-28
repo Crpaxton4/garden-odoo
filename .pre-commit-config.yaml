@@ -1,0 +1,91 @@
+repos:
+  # ── General file hygiene ───────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+        # JSONC with comments; Prettier still formats them
+        exclude: ^(\.devcontainer/devcontainer\.json|\.vscode/settings\.json)$
+      - id: check-xml
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # ── Python: Black (formatter — defaults are authoritative) ─────────
+  - repo: https://github.com/psf/black
+    rev: 26.3.1
+    hooks:
+      - id: black
+
+  # ── Python: isort (import sorting — Black-compatible) ──────────────
+  - repo: https://github.com/pycqa/isort
+    rev: 8.0.1
+    hooks:
+      - id: isort
+
+  # ── Python: pylint + pylint-odoo ───────────────────────────────────
+  # Runs as a local hook so it can resolve Odoo imports from the
+  # devcontainer environment.
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint (pylint-odoo)
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          - --rcfile=.pylintrc
+        require_serial: true
+
+  # ── JS / XML / HTML / SCSS / CSS / MD / YAML: Prettier ─────────────
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        additional_dependencies:
+          - prettier@3.4.2
+          - "@prettier/plugin-xml@3.4.1"
+        types_or:
+          - javascript
+          - css
+          - scss
+          - xml
+          - html
+          - markdown
+          - yaml
+          - json
+
+  # ── JS: ESLint (code quality) ──────────────────────────────────────
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.14.0
+    hooks:
+      - id: eslint
+        files: \.m?js$
+        types: [file]
+        additional_dependencies:
+          - eslint@9.14.0
+          - "@eslint/js@9.14.0"
+          - globals@15.12.0
+
+  # ── SCSS / CSS: Stylelint ──────────────────────────────────────────
+  - repo: https://github.com/thibaudcolas/pre-commit-stylelint
+    rev: v16.10.0
+    hooks:
+      - id: stylelint
+        files: \.(css|scss)$
+        additional_dependencies:
+          - stylelint@16.10.0
+          - stylelint-config-standard-scss@13.1.0
+
+  # ── Markdown: markdownlint ─────────────────────────────────────────
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.14.0
+    hooks:
+      - id: markdownlint-cli2

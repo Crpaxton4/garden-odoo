@@ -1,0 +1,25 @@
+services:
+  odoo:
+    image: ghcr.io/crpaxton4/garden-odoo/devcontainer:latest
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    tty: true
+    depends_on:
+      - db
+    volumes:
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+      - odoo-data:/var/lib/odoo
+    ports:
+      - 8069:8069
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+volumes:
+  postgres:
+  odoo-data:

@@ -1,0 +1,57 @@
+name: Devcontainer Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".devcontainer/**"
+      - "devops/**"
+      - "requirements-dev.txt"
+      - "package.json"
+      - "package-lock.json"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".devcontainer/**"
+      - "devops/**"
+      - "requirements-dev.txt"
+      - "package.json"
+      - "package-lock.json"
+
+concurrency:
+  group: devcontainer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test-push:
+    name: Build, Test & Push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set image name
+        id: image
+        run: |
+          IMAGE_NAME="ghcr.io/${GITHUB_REPOSITORY,,}/devcontainer"
+          echo "name=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+      # Pull requests build and test the image; only pushes to main publish it.
+      - name: Build, test & push devcontainer image
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ${{ steps.image.outputs.name }}
+          cacheFrom: ${{ steps.image.outputs.name }}
+          imageTag: latest,${{ github.sha }}
+          push: ${{ github.event_name == 'push' && 'always' || 'never' }}
+          runCmd: bash devops/tests/run_all.sh --ci

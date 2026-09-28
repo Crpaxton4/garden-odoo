@@ -1,0 +1,19 @@
+{
+  "tabWidth": 4,
+  "plugins": ["@prettier/plugin-xml"],
+  "overrides": [
+    {
+      "files": ["*.json", "*.yml", "*.yaml"],
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": "*.xml",
+      "options": {
+        "xmlWhitespaceSensitivity": "ignore",
+        "xmlSelfClosingSpace": true
+      }
+    }
+  ]
+}

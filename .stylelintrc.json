@@ -1,0 +1,18 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "selector-class-pattern": [
+      "^o_[a-z][a-z0-9_]*$",
+      {
+        "message": "Class names must start with 'o_' and use lowercase + underscores (selector-class-pattern)"
+      }
+    ],
+    "custom-property-pattern": null,
+    "scss/dollar-variable-pattern": "^o-[a-z][a-z0-9-]*$",
+    "no-descending-specificity": null,
+    "scss/at-extend-no-missing-placeholder": null,
+    "declaration-no-important": true,
+    "color-named": "never"
+  },
+  "ignoreFiles": ["node_modules/**", "**/static/lib/**"]
+}

@@ -1,0 +1,124 @@
+{
+  // Odoo 19.0 — garden-odoo devcontainer
+  // `${containerEnv:ODOO_VERSION}` comes from the Odoo Docker image.
+  "name": "${localWorkspaceFolderBasename}-${containerEnv:ODOO_VERSION}",
+  "dockerComposeFile": "compose.yml",
+  // Never run this container as root. Host-side features bind-mount the host
+  // user's ~/.claude (and other config dirs) into the container; a root
+  // remoteUser writes those shared files as uid 0 and locks every other
+  // devcontainer on the host out of them. remoteUser is intentionally NOT set
+  // here: it defaults to the image's USER (`ubuntu`, see Dockerfile), which
+  // updateRemoteUserUID remaps to the host user's UID/GID at create time so
+  // bind mounts line up. sudo is baked into the image for root-only steps.
+  "updateRemoteUserUID": true,
+  "service": "odoo",
+  "overrideCommand": true,
+  "workspaceFolder": "/mnt/extra-addons/",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/mnt/extra-addons,type=bind,consistency=delegated"
+  ],
+  //#region Lifecycle Hooks
+  "onCreateCommand": "bash devops/devcontainer/onCreateCommand.sh",
+  "postCreateCommand": "bash devops/devcontainer/postCreateCommand.sh",
+  "postAttachCommand": "bash devops/devcontainer/postAttachCommand.sh",
+  //#endregion
+  "customizations": {
+    "vscode": {
+      "settings": {
+        //#region General Settings
+        "window.title": "${dirty}${remoteName}",
+        //#endregion
+        //#region Python / Odoo IDE Settings
+        "python.analysis.extraPaths": [
+          "/usr/lib/python3/dist-packages/odoo/addons",
+          "/mnt/extra-addons/src"
+        ],
+        "python.autoComplete.extraPaths": [
+          "/usr/lib/python3/dist-packages/odoo/addons",
+          "/mnt/extra-addons/src"
+        ],
+        //#endregion
+        //#region Launch Configurations
+        "launch": {
+          "configurations": [
+            {
+              "name": "Odoo: Python",
+              "justMyCode": false,
+              "type": "debugpy",
+              "request": "launch",
+              "program": "/usr/bin/odoo",
+              "console": "integratedTerminal",
+              "gevent": false,
+              "presentation": {
+                "group": "Odoo Services",
+                "order": 1
+              }
+            },
+            {
+              "name": "Odoo: OWL",
+              "request": "launch",
+              "type": "chrome",
+              "url": "http://localhost:8069/web?debug=assets",
+              "webRoot": "${workspaceFolder}",
+              "trace": true,
+              "sourceMaps": true,
+              "browserLaunchLocation": "ui",
+              "userDataDir": true,
+              "pathMapping": {
+                "/*": "${workspaceFolder}/*"
+              }
+            },
+            {
+              "name": "Odoo: Shell",
+              "justMyCode": false,
+              "type": "debugpy",
+              "request": "launch",
+              "program": "/usr/bin/odoo",
+              "console": "integratedTerminal",
+              "args": ["shell"],
+              "presentation": {
+                "group": "Odoo Services",
+                "order": 2
+              }
+            }
+          ],
+          "compounds": [
+            {
+              "name": "Odoo",
+              "configurations": ["Odoo: Python", "Odoo: OWL"],
+              "stopAll": true,
+              "presentation": {
+                "hidden": false,
+                "group": "Odoo",
+                "order": 1
+              }
+            }
+          ]
+        }
+        //#endregion
+      },
+      "extensions": [
+        // Python
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.pylint",
+        // JavaScript / CSS / Markdown
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "stylelint.vscode-stylelint",
+        "DavidAnson.vscode-markdownlint",
+        // XML / CSV / Editor
+        "redhat.vscode-xml",
+        "mechatroner.rainbow-csv",
+        "EditorConfig.EditorConfig",
+        // Odoo-specific
+        "jigar-patel.odoosnippets",
+        "trinhanhngoc.vscode-odoo",
+        "mvintg.odoo-file",
+        "odoo.owl-vision"
+      ]
+    }
+  }
+}
