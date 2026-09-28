@@ -23,7 +23,7 @@ sections = [
 
 [tool.coverage.run]
 branch = true
-source_dirs = ["."]
+source = ["src"]
 omit = [
     "**/tests/*",
     "**/test_*",

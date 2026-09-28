@@ -25,10 +25,12 @@
         //#endregion
         //#region Python / Odoo IDE Settings
         "python.analysis.extraPaths": [
-          "/usr/lib/python3/dist-packages/odoo/addons"
+          "/usr/lib/python3/dist-packages/odoo/addons",
+          "/mnt/extra-addons/src"
         ],
         "python.autoComplete.extraPaths": [
-          "/usr/lib/python3/dist-packages/odoo/addons"
+          "/usr/lib/python3/dist-packages/odoo/addons",
+          "/mnt/extra-addons/src"
         ],
         //#endregion
         //#region Launch Configurations
