@@ -1,0 +1,58 @@
+[MAIN]
+load-plugins = pylint_odoo
+
+[ODOOLINT]
+valid_odoo_versions = 19.0
+
+[MASTER]
+# Odoo community addons are installed as a Python package.
+# Enterprise addons live at /var/lib/odoo/addons/19.0/ (optional).
+init-hook = "import sys; sys.path.append('/var/lib/odoo/addons/19.0')"
+
+[FORMAT]
+# Black handles line wrapping.  Disable pylint's line-length check entirely.
+max-line-length = 999
+
+[MESSAGES CONTROL]
+# Disable checks that conflict with Odoo patterns or are handled by other tools.
+disable =
+    # Black & isort handle formatting — suppress all style noise
+    C0301,  # line-too-long (Black)
+    C0303,  # trailing-whitespace (editorconfig / pre-commit)
+    C0304,  # missing-final-newline (editorconfig)
+    C0330,  # wrong-hanging-indentation (Black)
+    W0301,  # unnecessary-semicolon (rare, not worth noise)
+    # Docstring rules — Odoo uses _description on models, not docstrings
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    # ORM false positives
+    E1101,  # no-member (ORM dynamic attributes: env, mapped, filtered, etc.)
+    W0223,  # abstract-method (common with Odoo abstract models / mixins)
+    W0221,  # arguments-differ (API decorators change method signatures)
+    # Complexity / structure (Odoo models are inherently complex)
+    R0801,  # duplicate-code
+    R0901,  # too-many-ancestors (models inherit mail.thread, mixins, etc.)
+    R0902,  # too-many-instance-attributes (models often have many fields)
+    R0903,  # too-few-public-methods (models may be data-only)
+    R0904,  # too-many-public-methods
+    R0913,  # too-many-arguments (create vals, action contexts)
+    R0914,  # too-many-locals
+    # Import order is handled by isort
+    C0411,  # wrong-import-order
+    C0412,  # ungrouped-imports
+    C0413,  # wrong-import-position
+    # Odoo uses class-level field assignment, not __init__
+    W0201,  # attribute-defined-outside-init
+
+[SIMILARITIES]
+min-similarity-lines = 8
+
+[BASIC]
+# Odoo models use short names for fields (ok, id, etc.)
+good-names = _, i, j, k, e, f, v, cr, uid, ids, id, ok, db, op
+
+[TYPECHECK]
+# ORM methods that pylint can't resolve
+ignored-classes = odoo.fields, odoo.models, werkzeug.local
+generated-members = env,cr,uid,id,ids,browse,search,create,write,unlink,read,mapped,filtered,sorted,exists,sudo,with_context,with_company,ref

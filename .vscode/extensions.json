@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.debugpy",
+    "ms-python.black-formatter",
+    "ms-python.isort",
+    "ms-python.pylint",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint",
+    "DavidAnson.vscode-markdownlint",
+    "EditorConfig.EditorConfig",
+    "redhat.vscode-xml",
+    "mechatroner.rainbow-csv",
+    "jigar-patel.odoosnippets",
+    "trinhanhngoc.vscode-odoo",
+    "mvintg.odoo-file",
+    "odoo.owl-vision"
+  ]
+}

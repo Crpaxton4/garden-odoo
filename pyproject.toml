@@ -1,0 +1,54 @@
+# Black is used with its defaults (line-length=88, double quotes, magic
+# trailing comma). No [tool.black] section — Black defaults are authoritative.
+
+[tool.isort]
+profile = "black"
+known_odoo = ["odoo"]
+known_odoo_addons = ["odoo.addons"]
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "ODOO",
+    "ODOO_ADDONS",
+    "FIRSTPARTY",
+    "LOCALFOLDER",
+]
+
+# ── Coverage.py ──────────────────────────────────────────────────────
+# Docs: https://coverage.readthedocs.io/en/7.13.5/config.html
+# Run:  python3 -m coverage run odoo-bin <flags> && coverage report
+# Python 3.14 uses the sysmon core by default — branch coverage works
+# out of the box; no explicit core setting needed.
+
+[tool.coverage.run]
+branch = true
+source_dirs = ["."]
+omit = [
+    "**/tests/*",
+    "**/test_*",
+    "**/__manifest__.py",
+    "**/__init__.py",
+    "**/static/*",
+    "**/migrations/*",
+    ".venv/*",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_empty = true
+precision = 2
+exclude_also = [
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"

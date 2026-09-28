@@ -1,0 +1,47 @@
+# Cosmic Ray — Mutation Testing Configuration for Odoo 19.0
+# Docs: https://cosmic-ray.readthedocs.io/en/stable/
+#
+# Usage:
+#   cosmic-ray init cosmic-ray.toml session.sqlite
+#   cosmic-ray baseline --report cosmic-ray.toml session.sqlite
+#   cosmic-ray exec cosmic-ray.toml session.sqlite
+#   cr-report session.sqlite
+#   cr-html session.sqlite > report.html
+#
+# Quick start (single module):
+#   ./ray_gun.sh garden_harvest
+#
+# This file is the single source of truth for mutation testing config.
+# The SKILL.md, instruction file, and this file are kept in sync by
+# .github/hooks/scripts/validate-mutation-config.sh
+
+[cosmic-ray]
+# Module path to mutate — set to a specific module's models/ directory.
+# Override per run via ray_gun.sh or by editing this value.
+# Examples:
+#   module-path = "garden_harvest/models/"
+#   module-path = "garden_sale/models/"
+module-path = "SET_MODULE_PATH"
+
+# Timeout in seconds per individual test run.
+# Odoo tests include startup overhead (~20s). Allow 60s for safety.
+timeout = 60.0
+
+# Exclude test files and boilerplate from mutation.
+excluded-modules = [
+    "**/tests/**",
+    "**/__init__.py",
+    "**/__manifest__.py",
+]
+
+# Test command for Odoo 19.0.
+# --test-tags: restrict to the module under test (replace SET_MODULE_TAG).
+# --stop-after-init: exit after tests complete.
+# --log-level=error: reduce noise during mutation runs.
+# --no-http: skip HTTP server startup for speed.
+test-command = "python3 -m coverage run --include='**/garden_*/**' --omit='**/*test*/**' odoo-bin -d test_db --test-enable --test-tags /SET_MODULE_TAG --stop-after-init --log-level=error --no-http"
+
+[cosmic-ray.distributor]
+# 'local' runs one mutation at a time (safest for Odoo database access).
+# Switch to 'http' for parallel execution with multiple workers.
+name = "local"
