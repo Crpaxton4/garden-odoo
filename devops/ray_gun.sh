@@ -2,28 +2,32 @@
 # ray_gun.sh — Run Cosmic Ray mutation testing for an Odoo 19.0 module.
 #
 # Usage:
-#   ./ray_gun.sh <module_name> [session=<path>]
+#   devops/ray_gun.sh <module_name> [session=<path>]
 #
 # Examples:
-#   ./ray_gun.sh garden_harvest
-#   ./ray_gun.sh garden_sale session=previous-run.sqlite
+#   devops/ray_gun.sh garden_product_seasonality
+#   devops/ray_gun.sh garden_product_seasonality session=previous-run.sqlite
 #
 # Creates a dated session DB, initialises mutations, baselines, executes,
 # and generates an HTML report.  Shows live progress during execution.
+# Runs from the repository root regardless of the caller's cwd.
 
 set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO_ROOT"
 
 # ── Arguments ────────────────────────────────────────────────────────
 
 if [[ $# -lt 1 ]]; then
     echo "Usage: $0 <module_name> [session=<path>]"
-    echo "  module_name  Odoo module to mutate (e.g. garden_harvest)"
+    echo "  module_name  Odoo module under src/ to mutate (e.g. garden_product_seasonality)"
     echo "  session=     Optional path to an existing session DB to resume"
     exit 1
 fi
 
 MODULE="$1"
-MODULE_DIR="${MODULE}/models/"
+MODULE_DIR="src/${MODULE}/models/"
 SESSION_DB="${MODULE}_mutations-$(date +%F).sqlite"
 
 if [[ "${2:-}" == session=* ]]; then
@@ -33,8 +37,7 @@ fi
 # ── Validate module exists ───────────────────────────────────────────
 
 if [[ ! -d "$MODULE_DIR" ]]; then
-    echo "Error: Module directory '$MODULE_DIR' not found."
-    echo "Make sure you run this from the repository root."
+    echo "Error: Module directory '$MODULE_DIR' not found under $REPO_ROOT."
     exit 1
 fi
 

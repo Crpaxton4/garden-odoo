@@ -7,7 +7,7 @@ on:
       - ".devcontainer/**"
       - "requirements-dev.txt"
       - "package.json"
-      - "tests/tooling/**"
+      - "devops/**"
 
 concurrency:
   group: devcontainer-${{ github.ref }}
@@ -44,4 +44,4 @@ jobs:
           cacheFrom: ${{ steps.image.outputs.name }}
           imageTag: latest,${{ github.sha }}
           push: always
-          runCmd: bash tests/tooling/run_all.sh --ci
+          runCmd: bash devops/tests/run_all.sh --ci

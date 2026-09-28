@@ -9,7 +9,6 @@ services:
       - db
     volumes:
       - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
-      - ./hooks:/tmp/hooks:ro
       - odoo-data:/var/lib/odoo
     ports:
       - 8069:8069

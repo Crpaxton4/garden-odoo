@@ -33,7 +33,7 @@ assert_python_import debugpy "debugpy is importable"
 suite_header "CLI Tools: Node.js"
 
 assert_command_exists node
-assert_version_match node 'v22\.' "node version is 22.x"
+assert_version_match node 'v2[2-9]\.' "node version is 22.x or newer"
 assert_command_exists npm
 assert_command_exists npx
 

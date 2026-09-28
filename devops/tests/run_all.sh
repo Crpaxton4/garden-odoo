@@ -2,8 +2,8 @@
 # run_all.sh — Master runner for tooling verification tests.
 #
 # Usage:
-#   bash tests/tooling/run_all.sh           # Run all suites
-#   bash tests/tooling/run_all.sh --ci      # Skip service tests (no Docker)
+#   bash devops/tests/run_all.sh           # Run all suites
+#   bash devops/tests/run_all.sh --ci      # Skip service tests (no Docker)
 #
 # Discovers and runs all test_*.sh files in this directory, aggregates
 # results, and exits non-zero if any suite fails.

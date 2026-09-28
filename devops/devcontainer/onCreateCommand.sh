@@ -1,21 +1,8 @@
 #!/bin/bash
-set -xo pipefail
-################################################################################
-# https://containers.dev/implementors/json_reference/
-# initializeCommand
-# >>> onCreateCommand
-# updateContentCommand
-# postCreateCommand
-# postStartCommand
-# postAttachCommand
-#
-# First of three commands that finalize container setup when a dev container is
-# created. Executes inside the container immediately after it has started for
-# the first time. No access to user-scoped secrets.
-#
+# onCreateCommand — first lifecycle hook after the container is created.
 # Heavy lifting (system packages, Python venv, Node.js) is baked into the
 # Dockerfile. This hook handles workspace-local setup only.
-################################################################################
+set -xo pipefail
 
 # Install Node.js dev dependencies (eslint, prettier, stylelint, etc.)
 # Uses the npm cache already present in the Docker image for speed.

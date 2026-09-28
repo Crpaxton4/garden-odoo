@@ -8,16 +8,15 @@ DEVCONTAINER_DIR="${REPO_ROOT}/.devcontainer"
 
 suite_header "Devcontainer: Lifecycle hooks"
 
+HOOKS_DIR="${REPO_ROOT}/devops/devcontainer"
 HOOK_SCRIPTS=(
     onCreateCommand.sh
-    updateContentCommand.sh
     postCreateCommand.sh
-    postStartCommand.sh
     postAttachCommand.sh
 )
 
 for hook in "${HOOK_SCRIPTS[@]}"; do
-    hook_path="${DEVCONTAINER_DIR}/hooks/${hook}"
+    hook_path="${HOOKS_DIR}/${hook}"
     assert_file_exists "$hook_path" "hook '$hook' exists"
     assert_file_executable "$hook_path" "hook '$hook' is executable"
 done
@@ -44,6 +43,9 @@ suite_header "Devcontainer: devcontainer.json"
 DC_JSON="${DEVCONTAINER_DIR}/devcontainer.json"
 assert_file_exists "$DC_JSON"
 assert_file_contains "$DC_JSON" 'dockerComposeFile.*compose\.yml' "devcontainer.json points at compose.yml"
+for hook in "${HOOK_SCRIPTS[@]}"; do
+    assert_file_contains "$DC_JSON" "devops/devcontainer/${hook}" "devcontainer.json wires '$hook' from devops/devcontainer/"
+done
 
 suite_header "Devcontainer: Extension superset check"
 

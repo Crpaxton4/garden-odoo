@@ -47,7 +47,7 @@ suite_header "CI Workflows: devcontainer.yml"
 DF="${WORKFLOWS}/devcontainer.yml"
 assert_file_contains "$DF" 'push:' "devcontainer.yml triggers on push"
 assert_file_contains "$DF" '\.devcontainer' "devcontainer.yml watches .devcontainer/ paths"
-assert_file_contains "$DF" 'tests/tooling' "devcontainer.yml watches tests/tooling/ paths"
+assert_file_contains "$DF" 'devops/' "devcontainer.yml watches devops/ paths"
 assert_file_contains "$DF" 'run_all\.sh --ci' "devcontainer.yml runs tooling tests via run_all.sh --ci"
 
 suite_header "CI Workflows: tooling.yml"

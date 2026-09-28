@@ -11,11 +11,9 @@
     "source=${localWorkspaceFolder},target=/mnt/extra-addons,type=bind,consistency=delegated"
   ],
   //#region Lifecycle Hooks
-  "onCreateCommand": "/tmp/hooks/onCreateCommand.sh",
-  "updateContentCommand": "/tmp/hooks/updateContentCommand.sh",
-  "postCreateCommand": "/tmp/hooks/postCreateCommand.sh",
-  "postStartCommand": "/tmp/hooks/postStartCommand.sh",
-  "postAttachCommand": "/tmp/hooks/postAttachCommand.sh",
+  "onCreateCommand": "bash devops/devcontainer/onCreateCommand.sh",
+  "postCreateCommand": "bash devops/devcontainer/postCreateCommand.sh",
+  "postAttachCommand": "bash devops/devcontainer/postAttachCommand.sh",
   //#endregion
   "customizations": {
     "vscode": {

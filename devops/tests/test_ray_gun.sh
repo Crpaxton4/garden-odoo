@@ -6,7 +6,7 @@ source "$(dirname "$0")/helpers.sh"
 
 suite_header "Mutation Testing: ray_gun.sh"
 
-RAY_GUN="${REPO_ROOT}/ray_gun.sh"
+RAY_GUN="${REPO_ROOT}/devops/ray_gun.sh"
 assert_file_exists "$RAY_GUN" "ray_gun.sh exists"
 assert_file_executable "$RAY_GUN" "ray_gun.sh is executable"
 

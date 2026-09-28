@@ -9,7 +9,7 @@
 #   cr-html session.sqlite > report.html
 #
 # Quick start (single module):
-#   ./ray_gun.sh garden_harvest
+#   devops/ray_gun.sh garden_product_seasonality
 #
 # This file is the single source of truth for mutation testing config.
 
