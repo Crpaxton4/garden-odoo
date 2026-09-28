@@ -3,7 +3,14 @@
   // `${containerEnv:ODOO_VERSION}` comes from the Odoo Docker image.
   "name": "${localWorkspaceFolderBasename}-${containerEnv:ODOO_VERSION}",
   "dockerComposeFile": "compose.yml",
-  "remoteUser": "root",
+  // Never run this container as root. Host-side features bind-mount the host
+  // user's ~/.claude (and other config dirs) into the container; a root
+  // remoteUser writes those shared files as uid 0 and locks every other
+  // devcontainer on the host out of them. remoteUser is intentionally NOT set
+  // here: it defaults to the image's USER (`ubuntu`, see Dockerfile), which
+  // updateRemoteUserUID remaps to the host user's UID/GID at create time so
+  // bind mounts line up. sudo is baked into the image for root-only steps.
+  "updateRemoteUserUID": true,
   "service": "odoo",
   "overrideCommand": true,
   "workspaceFolder": "/mnt/extra-addons/",

@@ -70,6 +70,12 @@ The container provides:
 - Node.js with JS tooling (eslint, prettier, stylelint)
 - Pre-configured launch configs for Python debugging, OWL debugging, and Odoo shell
 
+The container runs as the image's default non-root `ubuntu` user, remapped to your host UID/GID, so files it writes to bind mounts (the workspace, any host config dirs mounted by user-level features) stay owned by you. Passwordless `sudo` is available for the rare root-only step. If you previously used a build that ran as root, fix ownership on the host once before rebuilding:
+
+```bash
+sudo chown -R "$USER:$USER" ~/.claude "$(pwd)"
+```
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for branch naming, PR rules, and testing requirements.
 
 ## Links

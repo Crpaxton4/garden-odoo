@@ -37,6 +37,8 @@ assert_file_contains "$DOCKERFILE" 'FROM odoo:19' "Dockerfile uses FROM odoo:19 
 assert_file_contains "$DOCKERFILE" 'cli\.github\.com' "Dockerfile installs GitHub CLI (gh)"
 assert_file_contains "$DOCKERFILE" 'virtualenv.*--system-site-packages' "Dockerfile creates venv with system site-packages"
 assert_file_contains "$DOCKERFILE" 'requirements-dev\.txt' "Dockerfile installs requirements-dev.txt"
+assert_file_contains "$DOCKERFILE" '^\s+sudo \\' "Dockerfile installs sudo (root-only create steps without a root remoteUser)"
+assert_file_contains "$DOCKERFILE" '/etc/sudoers\.d/ubuntu' "Dockerfile grants ubuntu passwordless sudo"
 
 suite_header "Devcontainer: devcontainer.json"
 
@@ -46,6 +48,42 @@ assert_file_contains "$DC_JSON" 'dockerComposeFile.*compose\.yml' "devcontainer.
 for hook in "${HOOK_SCRIPTS[@]}"; do
     assert_file_contains "$DC_JSON" "devops/devcontainer/${hook}" "devcontainer.json wires '$hook' from devops/devcontainer/"
 done
+
+suite_header "Devcontainer: non-root remoteUser"
+
+# A root remoteUser writes the host-mounted Claude config (~/.claude) as uid 0
+# and breaks every other devcontainer on the host. Guard against regression.
+assert_file_not_contains "$DC_JSON" '"remoteUser":\s*"root"' "devcontainer.json does not set remoteUser=root"
+assert_file_contains "$DC_JSON" '"updateRemoteUserUID":\s*true' "devcontainer.json remaps the remote user to the host UID"
+# remoteUser defaults to the image USER, so the Dockerfile must end non-root.
+if [[ "$(grep -E '^USER ' "$DOCKERFILE" | tail -1)" == "USER ubuntu" ]]; then
+    pass "Dockerfile's final USER is ubuntu (default remoteUser is non-root)"
+else
+    fail "Dockerfile's final USER is not ubuntu: '$(grep -E '^USER ' "$DOCKERFILE" | tail -1)'"
+fi
+assert_file_contains "${HOOKS_DIR}/onCreateCommand.sh" 'sudo chown -R "\$\(id -u\):\$\(id -g\)"' "onCreateCommand.sh takes ownership of root-created dirs via sudo"
+assert_file_not_contains "${HOOKS_DIR}/onCreateCommand.sh" 'claude-home' "onCreateCommand.sh never touches the shared Claude config mount"
+
+# Runtime half: only meaningful inside the container (local dev or CI runCmd).
+if [[ -f /.dockerenv ]] || [[ -n "${REMOTE_CONTAINERS:-}" ]]; then
+    if [[ "$(id -u)" -ne 0 ]]; then
+        pass "tests run as a non-root user (uid $(id -u))"
+    else
+        fail "tests run as root — remoteUser is not in effect"
+    fi
+    assert_command_exists sudo "sudo is available for root-only create steps"
+    if [[ -d /var/lib/odoo ]]; then
+        if [[ -w /var/lib/odoo ]]; then
+            pass "/var/lib/odoo (Odoo data_dir) is writable by the current user"
+        else
+            fail "/var/lib/odoo (Odoo data_dir) is not writable by the current user"
+        fi
+    else
+        skip "/var/lib/odoo not present (not the Odoo image)"
+    fi
+else
+    skip "runtime user checks: not inside a container"
+fi
 
 suite_header "Devcontainer: Extension superset check"
 

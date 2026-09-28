@@ -34,6 +34,7 @@ RUN apt-get update -qq \
         git \
         python3-ipython \
         python3-virtualenv \
+        sudo \
     # GitHub CLI
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
         | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
@@ -42,6 +43,16 @@ RUN apt-get update -qq \
     && apt-get update -qq \
     && apt-get install -y --no-install-recommends -qq gh \
     && rm -rf /var/lib/apt/lists/*
+
+# ── 1b. Non-root dev user ───────────────────────────────────────────────────
+# The image ends with `USER ubuntu` (uid 1000 from the Ubuntu base; see the
+# last line of this file). devcontainer.json leaves remoteUser unset so it
+# defaults to that user, and updateRemoteUserUID=true remaps the account to the
+# host user's UID/GID at create time. Passwordless sudo covers the root-only
+# create-time steps (taking ownership of the odoo-data volume, see
+# devops/devcontainer/onCreateCommand.sh).
+RUN echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ubuntu \
+    && chmod 0440 /etc/sudoers.d/ubuntu
 
 # ── 2. Node.js 22 LTS (rarely changes) ──────────────────────────────────────
 # Install from NodeSource; clean up apt lists in same layer.
@@ -65,6 +76,9 @@ ENV PATH="/opt/venv/bin:$PATH"
 # ── 4. npm cache pre-warm (changes with package.json) ───────────────────────
 # Install once to populate the npm cache inside the image, then discard the
 # node_modules — the real install happens in the workspace at create-time.
+# The cache lives at a fixed shared path (not /root/.npm) so the non-root
+# remoteUser can use it; onCreateCommand.sh takes ownership of it.
+ENV NPM_CONFIG_CACHE=/opt/npm-cache
 COPY package.json /tmp/npm-cache-seed/package.json
 RUN cd /tmp/npm-cache-seed \
     && npm install --ignore-scripts \
@@ -74,3 +88,8 @@ RUN cd /tmp/npm-cache-seed \
 # Point the system odoo executable at the venv Python so CLI and debugger
 # run inside the virtualenv.
 RUN sed -i '1s|^#!.*python3|#!/opt/venv/bin/python|' /usr/bin/odoo
+
+# ── 6. Default user ─────────────────────────────────────────────────────────
+# Everything above ran as root. Hand the image to the non-root dev user so the
+# devcontainer's default remoteUser (and CI's runCmd) is never root.
+USER ubuntu

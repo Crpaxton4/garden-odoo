@@ -4,14 +4,37 @@
 # Dockerfile. This hook handles workspace-local setup only.
 set -xo pipefail
 
+# This hook runs as the (non-root) remoteUser, remapped to the host UID.
+# Paths that were created as root in the image or in a named volume must be
+# handed to that user before anything below writes to them:
+#   /var/lib/odoo   — odoo-data volume: data_dir, filestore, sessions. Odoo is
+#                     started by the dev user in this container (no separate
+#                     odoo service), so the dev user must own it.
+#   /opt/npm-cache  — npm cache pre-warmed in the image as root.
+# sudo is baked into the image for exactly this purpose; the shared Claude
+# config mount is deliberately NOT touched here.
+if [ "$(id -u)" -ne 0 ] && command -v sudo &>/dev/null; then
+  for dir in /var/lib/odoo /opt/npm-cache; do
+    if [ -d "$dir" ]; then
+      sudo chown -R "$(id -u):$(id -g)" "$dir"
+    fi
+  done
+  # Node/Claude live under a group-writable nvm prefix; join that group so
+  # `claude update` and `npm i -g` keep working without root.
+  if getent group nvm &>/dev/null; then
+    sudo usermod -aG nvm "$(id -un)"
+  fi
+fi
+
 # Install Node.js dev dependencies (eslint, prettier, stylelint, etc.)
 # Uses the npm cache already present in the Docker image for speed.
 if [ -f package.json ]; then
   npm install
 fi
 
-# The workspace is a bind mount owned by the host user; git refuses to touch
-# it from root until the directory is marked safe (also needed in CI).
+# The workspace is a bind mount owned by the host user. With the remoteUser
+# remapped to the host UID this is normally a no-op, but CI checkouts and any
+# UID mismatch still need the directory marked safe.
 git config --global --add safe.directory "$(pwd)"
 
 # Install pre-commit hooks into the repo
