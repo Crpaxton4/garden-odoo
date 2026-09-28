@@ -17,9 +17,7 @@ sections = [
 
 # ── Coverage.py ──────────────────────────────────────────────────────
 # Docs: https://coverage.readthedocs.io/en/7.13.5/config.html
-# Run:  python3 -m coverage run odoo-bin <flags> && coverage report
-# Python 3.14 uses the sysmon core by default — branch coverage works
-# out of the box; no explicit core setting needed.
+# Run:  python3 -m coverage run /usr/bin/odoo <flags> && coverage report
 
 [tool.coverage.run]
 branch = true

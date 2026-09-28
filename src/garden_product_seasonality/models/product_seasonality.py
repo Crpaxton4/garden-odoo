@@ -5,7 +5,7 @@ class ProductSeasonality(models.Model):
     _name = "product.seasonality"
     _description = "Product Seasonality and Growing Requirements"
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(required=True)
 
     # Planting windows represented as seasons for v1
     SEASONS = [
@@ -20,7 +20,7 @@ class ProductSeasonality(models.Model):
 
     # Growing time in days
     growing_time_days = fields.Integer(string="Growing Time (days)")
-    growing_time_notes = fields.Text(string="Growing Time Notes")
+    growing_time_notes = fields.Text()
 
     # Environmental requirements
     SUN = [
@@ -28,16 +28,14 @@ class ProductSeasonality(models.Model):
         ("partial_shade", "Partial shade"),
         ("shade", "Shade"),
     ]
-    sun_requirements = fields.Selection(selection=SUN, string="Sun Requirements")
+    sun_requirements = fields.Selection(selection=SUN)
 
     WATER = [
         ("low", "Low"),
         ("medium", "Medium"),
         ("high", "High"),
     ]
-    watering_requirements = fields.Selection(
-        selection=WATER, string="Watering Requirements"
-    )
+    watering_requirements = fields.Selection(selection=WATER)
 
     SOIL = [
         ("sandy", "Sandy"),
@@ -45,7 +43,7 @@ class ProductSeasonality(models.Model):
         ("clay", "Clay"),
         ("peat", "Peat"),
     ]
-    soil_requirements = fields.Selection(selection=SOIL, string="Soil Requirements")
+    soil_requirements = fields.Selection(selection=SOIL)
 
     FORM = [
         ("seed", "Seed"),
@@ -54,7 +52,7 @@ class ProductSeasonality(models.Model):
         ("bare_root", "Bare root"),
         ("transplant", "Transplant"),
     ]
-    form_factor = fields.Selection(selection=FORM, string="Form Factor")
+    form_factor = fields.Selection(selection=FORM)
 
     # Relationship to product.template — Many2many so seasonality records can be shared
     product_tmpl_ids = fields.Many2many(
@@ -76,5 +74,4 @@ class ProductTemplate(models.Model):
         relation="product_template_seasonality_rel",
         column1="product_tmpl_id",
         column2="seasonality_id",
-        string="Seasonality",
     )

@@ -66,7 +66,7 @@ fi
 # ── Baseline ─────────────────────────────────────────────────────────
 
 echo "Running baseline (unmutated tests must pass)..."
-cosmic-ray baseline --report "$CONFIG_FILE" "$SESSION_DB"
+cosmic-ray baseline "$CONFIG_FILE"
 echo ""
 
 # ── Execute mutations ────────────────────────────────────────────────

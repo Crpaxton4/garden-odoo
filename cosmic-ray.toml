@@ -37,7 +37,7 @@ excluded-modules = [
 # --stop-after-init: exit after tests complete.
 # --log-level=error: reduce noise during mutation runs.
 # --no-http: skip HTTP server startup for speed.
-test-command = "python3 -m coverage run --include='src/**' --omit='**/*test*/**' odoo-bin -d test_db --test-enable --test-tags /SET_MODULE_TAG --stop-after-init --log-level=error --no-http"
+test-command = "python3 -m coverage run --include='src/**' --omit='**/*test*/**' /usr/bin/odoo -d test_db --test-enable --test-tags /SET_MODULE_TAG --stop-after-init --log-level=error --no-http"
 
 [cosmic-ray.distributor]
 # 'local' runs one mutation at a time (safest for Odoo database access).

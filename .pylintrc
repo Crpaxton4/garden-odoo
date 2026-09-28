@@ -20,8 +20,10 @@ disable =
     C0301,  # line-too-long (Black)
     C0303,  # trailing-whitespace (editorconfig / pre-commit)
     C0304,  # missing-final-newline (editorconfig)
-    C0330,  # wrong-hanging-indentation (Black)
     W0301,  # unnecessary-semicolon (rare, not worth noise)
+    # OCA repository conventions that do not apply here
+    C8101,  # manifest-required-author (author must be OCA)
+    C8112,  # missing-readme (README.rst per module)
     # Docstring rules — Odoo uses _description on models, not docstrings
     C0114,  # missing-module-docstring
     C0115,  # missing-class-docstring
