@@ -2,7 +2,7 @@
 
 Both internal and external contributors are welcome. All contribution happens through GitHub issues and pull requests.
 
-For what this project is and what it covers, see [README.md](README.md).
+For what this project is, how the repo is laid out and how to set up the dev environment, see [README.md](README.md).
 
 ---
 
@@ -43,20 +43,6 @@ All changes go through a PR targeting `main`. Direct pushes are blocked.
 
 ---
 
-## Dev Environment
-
-This project uses a [devcontainer](https://containers.dev/) for a consistent development environment.
-
-### Quick start
-
-1. Install [Docker](https://docs.docker.com/get-docker/) and [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-2. Open the repo in VS Code and select **Reopen in Container**.
-3. The container provides Odoo 19.0, PostgreSQL 17, and all dev tooling pre-installed.
-
-See [README.md](README.md) for full details.
-
----
-
 ## Testing
 
 Every PR must include tests appropriate to its change:
@@ -68,6 +54,8 @@ Every PR must include tests appropriate to its change:
 | JS tour integration tests | End-to-end user flows                                              |
 | Bash tooling tests        | Devcontainer tool availability, config correctness, service health |
 
+Run the Bash tooling tests with `bash devops/tests/run_all.sh` (add `--ci` to skip the service checks).
+
 ---
 
 ## Code Quality & Security
@@ -75,5 +63,5 @@ Every PR must include tests appropriate to its change:
 PRs are gated on automated checks. Do not attempt to bypass them.
 
 - **CodeQL** — blocked on high-or-higher security alerts and scanning errors
-- **Code quality** — blocked on code quality errors
-- **PostToolUse hooks** — automatically lint changed files and validate configuration consistency after every AI-assisted edit (see `.github/hooks/post-edit.json`)
+- **Code Quality** — black, isort, ESLint, Prettier, Stylelint and markdownlint must pass
+- **Devcontainer Image** — the image must build and the Bash tooling tests must pass when `.devcontainer/`, `devops/` or the dependency files change

@@ -8,6 +8,8 @@ Built for a two-person operation. The priority is automation: the system tells u
 
 **Pre-development / planning.** No modules have been released yet.
 
+The first module, `garden_product_seasonality` (planting windows, growing time, sun/water/soil requirements), installs on Odoo 19 but is not released.
+
 ## Scope
 
 This solution will cover the following business domains:
@@ -36,8 +38,15 @@ This solution will cover the following business domains:
 ## Tech Stack
 
 - **Odoo** 19.0
-- **Python** 3.14
+- **Python** 3.12
 - **License** AGPL-3.0
+
+## Layout
+
+- `src/` — Odoo modules; this is the container's `addons_path`
+- `devops/` — devcontainer lifecycle hooks, the Bash tooling test suite (`devops/tests/run_all.sh`) and the mutation-testing wrapper (`devops/ray_gun.sh`)
+- `.devcontainer/` — Dockerfile, Compose file and Odoo config for the dev environment
+- `.github/workflows/` — CI: code quality, CodeQL, devcontainer image build
 
 ## Getting Started
 
@@ -51,7 +60,7 @@ This solution will cover the following business domains:
 1. Clone this repository.
 2. Open the repo in VS Code.
 3. When prompted, click **Reopen in Container** — or run the command palette action `Dev Containers: Reopen in Container`.
-4. Wait for the container build and lifecycle hooks to complete. This installs all dev dependencies, initializes the Odoo database, and generates `tsconfig.json`.
+4. Wait for the container build and lifecycle hooks to complete. This installs all dev dependencies and initializes the Odoo database.
 
 The container provides:
 
@@ -60,7 +69,6 @@ The container provides:
 - Python virtualenv with dev tools (black, isort, pylint, coverage, cosmic-ray)
 - Node.js with JS tooling (eslint, prettier, stylelint)
 - Pre-configured launch configs for Python debugging, OWL debugging, and Odoo shell
-- AI tooling: [Beads](https://github.com/gastownhall/beads) issue tracker (`bd` CLI + `beads-mcp` MCP), [MemPalace](https://github.com/milla-jovovich/mempalace) persistent memory, [Zeroshot](https://github.com/covibes/zeroshot) multi-agent orchestration
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for branch naming, PR rules, and testing requirements.
 
