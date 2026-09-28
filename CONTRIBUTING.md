@@ -38,7 +38,6 @@ All changes go through a PR targeting `main`. Direct pushes are blocked.
 - **Reviews:** none required; the sole maintainer merges their own work
 - **Threads:** all review threads must be resolved
 - **Checks:** CodeQL and Code Quality must pass
-- **Commits:** must be signed (GPG or SSH)
 
 ---
 
