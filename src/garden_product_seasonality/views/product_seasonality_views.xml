@@ -1,15 +1,15 @@
 <odoo>
-    <record id="view_product_seasonality_tree" model="ir.ui.view">
-        <field name="name">product.seasonality.tree</field>
+    <record id="view_product_seasonality_list" model="ir.ui.view">
+        <field name="name">product.seasonality.list</field>
         <field name="model">product.seasonality</field>
         <field name="arch" type="xml">
-            <tree string="Seasonality">
-                <field name="name"/>
-                <field name="planting_indoor"/>
-                <field name="planting_outdoor"/>
-                <field name="growing_time_days"/>
-                <field name="sun_requirements"/>
-            </tree>
+            <list string="Seasonality">
+                <field name="name" />
+                <field name="planting_indoor" />
+                <field name="planting_outdoor" />
+                <field name="growing_time_days" />
+                <field name="sun_requirements" />
+            </list>
         </field>
     </record>
 
@@ -20,28 +20,28 @@
             <form string="Seasonality">
                 <sheet>
                     <group>
-                        <field name="name"/>
-                        <field name="active"/>
+                        <field name="name" />
+                        <field name="active" />
                     </group>
                     <group>
-                        <field name="planting_indoor"/>
-                        <field name="planting_outdoor"/>
-                        <field name="growing_time_days"/>
-                        <field name="growing_time_notes"/>
+                        <field name="planting_indoor" />
+                        <field name="planting_outdoor" />
+                        <field name="growing_time_days" />
+                        <field name="growing_time_notes" />
                     </group>
                     <group>
-                        <field name="sun_requirements"/>
-                        <field name="watering_requirements"/>
-                        <field name="soil_requirements"/>
-                        <field name="form_factor"/>
+                        <field name="sun_requirements" />
+                        <field name="watering_requirements" />
+                        <field name="soil_requirements" />
+                        <field name="form_factor" />
                     </group>
                     <notebook>
                         <page string="Linked Products">
                             <field name="product_tmpl_ids">
-                                <tree string="Products">
-                                    <field name="name"/>
-                                    <field name="default_code"/>
-                                </tree>
+                                <list string="Products">
+                                    <field name="name" />
+                                    <field name="default_code" />
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -51,24 +51,29 @@
     </record>
 
     <!-- Add a notebook page to product.template to show seasonality -->
-    <record id="view_product_template_form_inherit_seasonality" model="ir.ui.view">
+    <record
+        id="view_product_template_form_inherit_seasonality"
+        model="ir.ui.view"
+    >
         <field name="name">product.template.form.inherit.seasonality</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field
+            name="inherit_id"
+            ref="product.product_template_only_form_view"
+        />
         <field name="arch" type="xml">
             <xpath expr="//sheet/notebook" position="inside">
                 <page string="Seasonality">
-                    <field name="seasonality_ids" widget="many2many_tags"/>
+                    <field name="seasonality_ids" widget="many2many_tags" />
                 </page>
             </xpath>
         </field>
     </record>
 
-    <!-- Add relation field on product.template via model extension (views expect field to exist) -->
     <record id="action_product_seasonality" model="ir.actions.act_window">
         <field name="name">Seasonality</field>
         <field name="res_model">product.seasonality</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create seasonality records and link them to products.
@@ -76,6 +81,11 @@
         </field>
     </record>
 
-    <menuitem id="menu_product_seasonality_root" name="Seasonality" parent="product.menu_products"/>
-    <menuitem id="menu_product_seasonality" name="Product Seasonality" parent="menu_product_seasonality_root" action="action_product_seasonality"/>
+    <menuitem id="menu_product_seasonality_root" name="Seasonality" />
+    <menuitem
+        id="menu_product_seasonality"
+        name="Product Seasonality"
+        parent="menu_product_seasonality_root"
+        action="action_product_seasonality"
+    />
 </odoo>

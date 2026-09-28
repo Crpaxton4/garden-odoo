@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class ProductSeasonality(models.Model):
@@ -35,7 +35,9 @@ class ProductSeasonality(models.Model):
         ("medium", "Medium"),
         ("high", "High"),
     ]
-    watering_requirements = fields.Selection(selection=WATER, string="Watering Requirements")
+    watering_requirements = fields.Selection(
+        selection=WATER, string="Watering Requirements"
+    )
 
     SOIL = [
         ("sandy", "Sandy"),
@@ -64,7 +66,6 @@ class ProductSeasonality(models.Model):
     )
 
     active = fields.Boolean(default=True)
-
 
 
 class ProductTemplate(models.Model):
