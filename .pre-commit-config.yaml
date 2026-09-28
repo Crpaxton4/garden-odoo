@@ -18,13 +18,13 @@ repos:
 
   # ── Python: Black (formatter — defaults are authoritative) ─────────
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 26.3.1
     hooks:
       - id: black
 
   # ── Python: isort (import sorting — Black-compatible) ──────────────
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 8.0.1
     hooks:
       - id: isort
 

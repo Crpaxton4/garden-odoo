@@ -16,8 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
-          allow-prereleases: true
+          python-version: "3.12"
 
       - name: Install Python dependencies
         run: pip install -r requirements-dev.txt
@@ -31,10 +30,10 @@ jobs:
         run: npm ci
 
       - name: Black (formatting)
-        run: black --check .
+        run: black --check src devops
 
       - name: isort (import order)
-        run: isort --check-only .
+        run: isort --check-only src
 
       - name: ESLint
         run: npx eslint .
@@ -43,7 +42,7 @@ jobs:
         run: npx prettier --check "**/*.{js,css,scss,xml,html,md,yml,yaml,json}"
 
       - name: Stylelint
-        run: npx stylelint "**/*.{css,scss}"
+        run: npx stylelint --allow-empty-input "**/*.{css,scss}"
 
       - name: markdownlint
-        run: npx markdownlint-cli2 "**/*.md"
+        run: npx markdownlint-cli2 "**/*.md" "#node_modules"

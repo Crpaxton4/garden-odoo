@@ -72,6 +72,11 @@ export default [
 
     // ── Global ignores ──────────────────────────────────────────────
     {
-        ignores: ["node_modules/", "**/static/lib/", "**/static/src/lib/"],
+        ignores: [
+            "node_modules/",
+            ".venv/",
+            "**/static/lib/",
+            "**/static/src/lib/",
+        ],
     },
 ];
