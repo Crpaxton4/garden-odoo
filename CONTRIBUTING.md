@@ -35,10 +35,9 @@ Branches must use one of these prefixes. Any other name is rejected by the repos
 All changes go through a PR targeting `main`. Direct pushes are blocked.
 
 - **Merge method:** squash only
-- **Reviews:** 1 approving review required; code-owner approval required
+- **Reviews:** none required; the sole maintainer merges their own work
 - **Threads:** all review threads must be resolved
-- **Stale reviews:** dismissed automatically on new push
-- **Last push:** must be approved before merge
+- **Checks:** CodeQL and Code Quality must pass
 - **Commits:** must be signed (GPG or SSH)
 
 ---
