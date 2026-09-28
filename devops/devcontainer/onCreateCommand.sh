@@ -10,6 +10,10 @@ if [ -f package.json ]; then
   npm install
 fi
 
+# The workspace is a bind mount owned by the host user; git refuses to touch
+# it from root until the directory is marked safe (also needed in CI).
+git config --global --add safe.directory "$(pwd)"
+
 # Install pre-commit hooks into the repo
 if command -v pre-commit &>/dev/null; then
   pre-commit install
